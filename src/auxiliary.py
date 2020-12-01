@@ -54,37 +54,100 @@ def game_finish_text(screen):
     screen.blit(win_text, (130, 300))
 
 
-# next four functions randomly generate position and direction for each ship
-def negative_x(ship):
-    ship.positions[0] = -20
-    ship.positions[1] = random.randint(0, 768)
-    ship.velocity[3] = 1
-    ship.velocity[1] = random.random()
-    ship.velocity[0] = random.random()
+def pink_salmon(shoal):
+    shoal.weight = random.randint(2, 4)
+    shoal.value = random.randint(10, 13)
+    shoal.fish_image = pygame.image.load('../src/images/fish/pink_salmon.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Pink salmon"
 
 
-def positive_x(ship):
-    ship.positions[0] = 1390
-    ship.positions[1] = random.randint(0, 768)
-    ship.velocity[2] = 1
-    ship.velocity[1] = random.random()
-    ship.velocity[0] = random.random()
+def pollock(shoal):
+    shoal.weight = random.randint(4, 6)
+    shoal.value = random.randint(7, 9)
+    shoal.fish_image = pygame.image.load('../src/images/fish/pollock.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Pollock"
 
 
-def negative_y(ship):
-    ship.positions[0] = random.randint(0, 1366)
-    ship.positions[1] = -20
-    ship.velocity[1] = 1
-    ship.velocity[3] = random.random()
-    ship.velocity[2] = random.random()
+def gilt_head_bream(shoal):
+    shoal.weight = random.randint(7, 10)
+    shoal.value = random.randint(7, 10)
+    shoal.fish_image = pygame.image.load('../src/images/fish/gilt_head_bream.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Gilt-head bream"
 
 
-def positive_y(ship):
-    ship.positions[0] = random.randint(0, 1366)
-    ship.positions[1] = 790
-    ship.velocity[0] = 1
-    ship.velocity[3] = random.random()
-    ship.velocity[2] = random.random()
+def rockfish(shoal):
+    shoal.weight = random.randint(11, 13)
+    shoal.value = random.randint(3, 5)
+    shoal.fish_image = pygame.image.load('../src/images/fish/rockfish.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Rockfish"
+
+
+def mackerel(shoal):
+    shoal.weight = random.randint(3, 5)
+    shoal.value = random.randint(4, 7)
+    shoal.fish_image = pygame.image.load('../src/images/fish/mackerel.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Mackerel"
+
+
+def sea_bass(shoal):
+    shoal.weight = random.randint(6, 8)
+    shoal.value = random.randint(8, 11)
+    shoal.fish_image = pygame.image.load('../src/images/fish/sea_bass.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Sea bass"
+
+
+def keta(shoal):
+    shoal.weight = random.randint(1, 3)
+    shoal.value = random.randint(2, 4)
+    shoal.fish_image = pygame.image.load('../src/images/fish/keta.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Keta"
+
+
+def codfish(shoal):
+    shoal.weight = random.randint(5, 7)
+    shoal.value = random.randint(4, 8)
+    shoal.fish_image = pygame.image.load('../src/images/fish/codfish.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Codfish"
+
+
+def barracuda(shoal):
+    shoal.weight = random.randint(8, 10)
+    shoal.value = random.randint(11, 13)
+    shoal.fish_image = pygame.image.load('../src/images/fish/barracuda.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Barracuda"
+
+
+def lemonema(shoal):
+    shoal.weight = random.randint(3, 9)
+    shoal.value = random.randint(5, 6)
+    shoal.fish_image = pygame.image.load('../src/images/fish/lemonema.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Lemonema"
+
+
+def tuna(shoal):
+    shoal.weight = random.randint(4, 6)
+    shoal.value = random.randint(7, 9)
+    shoal.fish_image = pygame.image.load('../src/images/fish/tuna.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Tuna"
+
+
+def halibut(shoal):
+    shoal.weight = random.randint(9, 11)
+    shoal.value = random.randint(5, 8)
+    shoal.fish_image = pygame.image.load('../src/images/fish/halibut.png')
+    shoal.fish_image = pygame.transform.scale(shoal.fish_image, (40, 30))
+    shoal.name = "Halibut"
 
 
 def quit_game():

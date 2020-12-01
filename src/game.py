@@ -1,5 +1,4 @@
 import pygame
-import sys
 import random
 import math
 import time
@@ -41,12 +40,16 @@ def player_interface(player):
     for shoal in player.shoals:
         pygame.draw.rect(screen, colors.BLACK, (blit_pos[0], blit_pos[1], 50, 50))
         pygame.draw.rect(screen, colors.WHITE, (blit_pos[0]+5, blit_pos[1]+5, 40, 40))
+        screen.blit(shoal.fish_image, (blit_pos[0]+5, blit_pos[1]+10))
         screen.blit(
-            aux.text_outline(pygame.font.SysFont('default', 25), "V: " + str(shoal.value), colors.WHITE, colors.BLACK),
-            (70, blit_pos[1]+5))
+            aux.text_outline(pygame.font.SysFont('default', 25), str(shoal.name), colors.WHITE, colors.BLACK),
+            (70, blit_pos[1] + 5))
         screen.blit(
-            aux.text_outline(pygame.font.SysFont('default', 25), "P: " + str(shoal.weight), colors.WHITE, colors.BLACK),
-            (70, blit_pos[1]+27))
+            aux.text_outline(pygame.font.SysFont('default', 22), "V: " + str(shoal.value), colors.WHITE, colors.BLACK),
+            (70, blit_pos[1]+30))
+        screen.blit(
+            aux.text_outline(pygame.font.SysFont('default', 22), "P: " + str(shoal.weight), colors.WHITE, colors.BLACK),
+            (110, blit_pos[1]+30))
         blit_pos[1] += 60
 
 
@@ -113,9 +116,27 @@ class Shoal(object):
     def __init__(self):
         self.rect = pygame.Rect(random.randint(20, 1340), random.randint(20, 740), 20, 20)
         self.time_of_creation = time.perf_counter()
-        # criar uma tabela de pares peso-valor, vai deixar mais balanceado
+        self.fish_image = None
+        self.name = None
+        fish = {
+            "pink salmon": aux.pink_salmon,
+            "pollock": aux.pollock,
+            "gilt-head bream": aux.gilt_head_bream,
+            "rockfish": aux.rockfish,
+            "mackerel": aux.mackerel,
+            "sea bass": aux.sea_bass,
+            "keta": aux.keta,
+            "codfish": aux.codfish,
+            "barracuda": aux.barracuda,
+            "lemonema": aux.lemonema,
+            "tuna": aux.tuna,
+            "halibut": aux.halibut
+        }
+        fishes = ["pink salmon", "pollock", "gilt-head bream", "rockfish", "mackerel", "sea bass", "keta", "codfish", "barracuda", "lemonema", "tuna", "halibut"]
+        chances = [0.1, 0.25, 0.25, 0.1, 0.25, 0.2, 0.3, 0.25, 0.15, 0.25, 0.25, 0.2]
         self.value = random.randint(1, 20)
         self.weight = random.randint(1, 5)
+        fish[random.choices(fishes, chances)[0]](self)
 
 
 def get_x_coordinates(shoals, player):
