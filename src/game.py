@@ -1,4 +1,5 @@
 import pygame
+import sys
 import random
 import math
 import time
@@ -10,6 +11,9 @@ clock = pygame.time.Clock()
 size = (1366, 768)
 level = 1
 
+screen = pygame.display.set_mode(size)
+screen.fill(colors.WHITE)
+
 # variables for window customization
 menu = pygame.image.load('../src/images/menu.png')
 players_img = pygame.image.load('../src/images/ship-player.png')
@@ -19,15 +23,48 @@ pygame.display.set_caption("Cargo")
 icon = pygame.image.load('../src/images/icon.png')
 pygame.display.set_icon(icon)
 
-screen = pygame.display.set_mode(size)
-screen.fill(colors.WHITE)
-
 
 # fazer função de fade in fade out pra dar blit nos cardumes
 
 
+def player_interface(player):
+    screen.blit(
+        aux.text_outline(pygame.font.SysFont('default', 25), "Carga atual: " + str(player.current_load) + "/" + str(player.max_load), colors.WHITE, colors.BLACK),
+        (5, 730))
+    screen.blit(
+        aux.text_outline(pygame.font.SysFont('default', 25),
+                         "Valor da carga: " + str(player.total_value), colors.WHITE,
+                         colors.BLACK),
+        (5, 750))
+
+    blit_pos = [10, 10]
+    for shoal in player.shoals:
+        pygame.draw.rect(screen, colors.BLACK, (blit_pos[0], blit_pos[1], 50, 50))
+        pygame.draw.rect(screen, colors.WHITE, (blit_pos[0]+5, blit_pos[1]+5, 40, 40))
+        screen.blit(
+            aux.text_outline(pygame.font.SysFont('default', 25), "V: " + str(shoal.value), colors.WHITE, colors.BLACK),
+            (70, blit_pos[1]+5))
+        screen.blit(
+            aux.text_outline(pygame.font.SysFont('default', 25), "P: " + str(shoal.weight), colors.WHITE, colors.BLACK),
+            (70, blit_pos[1]+27))
+        blit_pos[1] += 60
+
+
+def harbor_interface(out):
+    screen.blit(
+        aux.text_outline(pygame.font.SysFont('default', 25),
+                         "Carga atual: " + str(out.load) + "/" + str(out.max_load), colors.WHITE,
+                         colors.BLACK),
+        (1140, 730))
+    screen.blit(
+        aux.text_outline(pygame.font.SysFont('default', 25),
+                         "Valor total: " + str(out.current_value) + "/" + str(out.quota), colors.WHITE,
+                         colors.BLACK),
+        (1150, 750))
+
+
 # updates and redraws position of all objects on screen
-def update(player, out, shoals, show_timer):
+def update(player, out, shoals):
     player.rect[1] -= player.movement[0]
     player.rect[1] += player.movement[1]
     player.rect[0] -= player.movement[2]
@@ -44,10 +81,12 @@ def update(player, out, shoals, show_timer):
     screen.blit(players_img, player)
     screen.blit(port_img, out)
     for shoal in shoals:
-        if time.perf_counter() - shoal.time_of_creation > 5:
+        if time.perf_counter() - shoal.time_of_creation > random.uniform(3.0, 6.0):
             shoals.remove(shoal)
             continue
         screen.blit(shoals_img, shoal)
+    player_interface(player)
+    harbor_interface(out)
 
 
 class Player(object):
@@ -56,6 +95,7 @@ class Player(object):
         self.movement = [0, 0, 0, 0]
         self.current_load = 0
         self.max_load = 20
+        self.total_value = 0
         self.shoals = []
 
 
@@ -75,7 +115,7 @@ class Shoal(object):
         self.time_of_creation = time.perf_counter()
         # criar uma tabela de pares peso-valor, vai deixar mais balanceado
         self.value = random.randint(1, 20)
-        self.weight = random.randint(1, 20)
+        self.weight = random.randint(1, 5)
 
 
 def get_x_coordinates(shoals, player):
@@ -98,6 +138,7 @@ def collision(shoals, ordered_array, player):
                     if (shoal.rect[0], shoal.rect[1]) == p1 or (shoal.rect[0], shoal.rect[1]) == p2:
                         if player.max_load >= player.current_load + shoal.weight:
                             player.current_load += shoal.weight
+                            player.total_value += shoal.value
                             player.shoals.append(shoal)
                             shoals.remove(shoal)
                         break
@@ -176,14 +217,14 @@ def game_loop():
     shoals = []
 
     while True:
-        update(player, out, shoals, show_timer)
+        update(player, out, shoals)
 
         aux.timer_text(screen, show_timer)
         show_timer -= (time.perf_counter() - level_timer)
         level_timer = time.perf_counter()
         if show_timer < 0:
             restart_game_window(False)
-        if time.perf_counter() - elapsed > 1:
+        if time.perf_counter() - elapsed > random.uniform(0.5, 1.0):
             shoals.append(Shoal())
             elapsed = time.perf_counter()
 
@@ -200,6 +241,11 @@ def game_loop():
             if event.type == pygame.QUIT:
                 aux.quit_game()
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if player.shoals:
+                        temp = player.shoals.pop()
+                        player.current_load -= temp.weight
+                        player.total_value -= temp.value
                 if event.key == pygame.K_UP:
                     player.movement[0] = 1
                 if event.key == pygame.K_DOWN:
