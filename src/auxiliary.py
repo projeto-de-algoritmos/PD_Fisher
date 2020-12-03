@@ -156,7 +156,7 @@ def quit_game():
 
 
 def text_objects(text, font):
-    text_surface = font.render(text, True, colors.NODE)
+    text_surface = font.render(text, True, colors.WHITE)
     return text_surface, text_surface.get_rect()
 
 
@@ -171,7 +171,7 @@ def button(screen, msg, x, y, w, h, ic, action=None):
     else:
         pygame.draw.rect(screen, ic, (x, y, w, h))
 
-    small_text = pygame.font.SysFont("default", 20)
+    small_text = pygame.font.SysFont("default", 30)
     text_surf, text_rect = text_objects(msg, small_text)
     text_rect.center = ((x + (w / 2)), (y + (h / 2)))
     screen.blit(text_surf, text_rect)

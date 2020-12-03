@@ -14,9 +14,9 @@ screen = pygame.display.set_mode(size)
 screen.fill(colors.WHITE)
 
 # variables for window customization
-menu = pygame.image.load('../src/images/menu.png')
+menu = pygame.image.load('../src/images/menu2.png')
 players_img = pygame.image.load('../src/images/ship-player.png')
-shoals_img = pygame.image.load('../src/images/ships.png')
+shoals_img = pygame.image.load('../src/images/bubbles.png')
 port_img = pygame.image.load('../src/images/port.png')
 pygame.display.set_caption("Cargo")
 icon = pygame.image.load('../src/images/icon.png')
@@ -179,7 +179,7 @@ def menu_window():
         screen.fill(colors.WHITE)
         screen.blit(menu, (0, 0))
 
-        aux.button(screen, 'START', 590, 450, 200, 100, colors.BRIGHT_GREEN, game_loop)
+        aux.button(screen, 'START', 550, 55, 240, 100, colors.START, game_loop)
         pygame.display.update()
         clock.tick(15)
 
