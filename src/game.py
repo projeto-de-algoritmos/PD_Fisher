@@ -84,7 +84,7 @@ def update(player, out, shoals):
     screen.blit(players_img, player)
     screen.blit(port_img, out)
     for shoal in shoals:
-        if time.perf_counter() - shoal.time_of_creation > random.uniform(3.0, 6.0):
+        if time.perf_counter() - shoal.time_of_creation > random.uniform(4.0, 6.0):
             shoals.remove(shoal)
             continue
         screen.blit(shoals_img, shoal)
@@ -106,8 +106,8 @@ class Exit(object):
     def __init__(self):
         self.load = 0
         self.current_value = 0
-        self.max_load = 10
-        self.quota = 20
+        self.max_load = 60
+        self.quota = 80
         self.rect = pygame.Rect(1298, 698, 20, 20)
         self.shoals = []
 
@@ -223,10 +223,12 @@ def finish_game_window():
 def next_level(out):
     global level
     level += 1
+    if level == 6:
+        finish_game_window()
     out.load = 0
     out.current_value = 0
-    out.max_load -= 1
-    out.quota += 5
+    out.max_load -= 5
+    out.quota += 10
 
 
 def game_loop():
@@ -245,7 +247,7 @@ def game_loop():
         level_timer = time.perf_counter()
         if show_timer < 0:
             restart_game_window(False)
-        if time.perf_counter() - elapsed > random.uniform(0.5, 1.0):
+        if time.perf_counter() - elapsed > random.uniform(1.0, 2.0):
             shoals.append(Shoal())
             elapsed = time.perf_counter()
 
