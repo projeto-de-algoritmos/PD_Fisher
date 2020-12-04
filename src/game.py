@@ -134,8 +134,8 @@ class Shoal(object):
         }
         fishes = ["pink salmon", "pollock", "gilt-head bream", "rockfish", "mackerel", "sea bass", "keta", "codfish", "barracuda", "lemonema", "tuna", "halibut"]
         chances = [0.1, 0.25, 0.25, 0.1, 0.25, 0.2, 0.3, 0.25, 0.15, 0.25, 0.25, 0.2]
-        self.value = random.randint(1, 20)
-        self.weight = random.randint(1, 5)
+        self.value = 0
+        self.weight = 0
         fish[random.choices(fishes, chances)[0]](self)
 
 
@@ -231,6 +231,22 @@ def next_level(out):
     out.quota += 10
 
 
+def knapSack(W, wt, val, n):
+    K = [[0 for x in range(W + 1)] for x in range(n + 1)]
+
+    # Build table K[][] in bottom up manner
+    for i in range(n + 1):
+        for w in range(W + 1):
+            if i == 0 or w == 0:
+                K[i][w] = 0
+            elif wt[i - 1] <= w:
+                K[i][w] = max(val[i - 1] + K[i - 1][w - wt[i - 1]], K[i - 1][w])
+            else:
+                K[i][w] = K[i - 1][w]
+
+    return K[n][W]
+
+
 def game_loop():
     level_timer = time.perf_counter()
     show_timer = 60
@@ -256,6 +272,18 @@ def game_loop():
 
         if math.sqrt((player.rect[0] - out.rect[0]) ** 2 + (player.rect[1] - out.rect[1]) ** 2) < 30:
             # knapsack usando os cardumes do navio e do porto, descartar os q n forem selecionados
+            wt = []
+            vl = []
+            for shoal in player.shoals:
+                wt.append(shoal.weight)
+                vl.append(shoal.value)
+
+            for shoal in out.shoals:
+                wt.append(shoal.weight)
+                vl.append(shoal.value)
+
+            out.current_value = knapSack(out.max_load, wt, vl, len(wt))
+
             if out.current_value >= out.quota:
                 next_level(out)
                 restart_game_window(True)
