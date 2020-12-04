@@ -14,8 +14,25 @@
 Fishing é um jogo onde o jogador controla uma embarcação pesqueira que deve entregar um valor mínimo em pescados para o porto da cidade. O projeto utiliza o algoritmo de Knapsack para determinar a melhor combinação de pescados que será mantida no porto, dado que o jogador precisará fazer várias viagens para cumprir a cota exigida.
 
 ## Screenshots
+* ### Menu
 
-Adicione 3 ou mais screenshots do projeto em funcionamento.
+![print_menu](src/images/menu_screenshot.png)
+
+* ### Tela inicial do Jogo
+
+![print_game](src/images/game_screenshot.png)
+
+* ### Tela de vitória da fase
+
+![print_win](src/images/win_screenshot.png)
+
+* ### Tela de derrota
+
+![print_lose](src/images/lose_screenshot.png)
+
+* ### Jogo
+
+![gif](src/images/gif.gif)
 
 ## Instalação 
 **Linguagem**: Python<br>
