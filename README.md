@@ -56,7 +56,7 @@ python3 src/game.py
 ## Uso 
 
 ### Vídeo explicativo
-[Video]()
+[Video](https://github.com/projeto-de-algoritmos/PD_Fisher/blob/master/dp_video_explicativo.mp4)
 
 * Player - navio branco.
 * Local de entrega - porto.
