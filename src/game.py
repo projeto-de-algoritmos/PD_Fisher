@@ -14,11 +14,11 @@ screen = pygame.display.set_mode(size)
 screen.fill(colors.WHITE)
 
 # variables for window customization
-menu = pygame.image.load('../src/images/menu2.png')
+menu = pygame.image.load('../src/images/menu.jpg')
 players_img = pygame.image.load('../src/images/ship-player.png')
 shoals_img = pygame.image.load('../src/images/bubbles.png')
 port_img = pygame.image.load('../src/images/port.png')
-pygame.display.set_caption("Cargo")
+pygame.display.set_caption("Fisher")
 icon = pygame.image.load('../src/images/icon.png')
 pygame.display.set_icon(icon)
 
