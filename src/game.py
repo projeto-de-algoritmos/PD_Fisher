@@ -250,11 +250,11 @@ def knapsack(w, wt, val, n):
 def game_loop():
     global level
     levels = {
-        1: [60, 80],
-        2: [55, 85],
-        3: [50, 90],
-        4: [45, 95],
-        5: [40, 100]
+        1: [50, 60],
+        2: [48, 65],
+        3: [45, 70],
+        4: [43, 75],
+        5: [40, 80]
     }
     level_timer = time.perf_counter()
     show_timer = 80
