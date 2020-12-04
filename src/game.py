@@ -23,6 +23,7 @@ icon = pygame.image.load('../src/images/icon.png')
 pygame.display.set_icon(icon)
 
 
+# renders player interface (shoals caught and ship values)
 def player_interface(player):
     screen.blit(
         aux.text_outline(pygame.font.SysFont('default', 25), "Carga atual: " + str(player.current_load) + "/" + str(player.max_load), colors.WHITE, colors.BLACK),
@@ -50,6 +51,7 @@ def player_interface(player):
         blit_pos[1] += 60
 
 
+# render harbor interface (values)
 def harbor_interface(out):
     screen.blit(
         aux.text_outline(pygame.font.SysFont('default', 25),
@@ -109,6 +111,9 @@ class Exit(object):
         self.shoals = []
 
 
+# the type of fish is chosen upon creation of a new object. The fish chosen is random and takes into account the
+# values defined in "chances", meaning "pink salmon" is rarer than a "pollock", for example. The weight and value
+# variables are further chosen randomly within a predetermined spam defined in "auxiliary.py"
 class Shoal(object):
     def __init__(self):
         self.rect = pygame.Rect(random.randint(20, 1340), random.randint(20, 740), 20, 20)
@@ -224,6 +229,7 @@ def next_level():
         finish_game_window()
 
 
+# knapsack algorithm, modified to return list of (weight, value) pairs instead of sum of values only.
 def knapsack(w, wt, val, n):
     k = [[0 for x in range(w + 1)] for x in range(n + 1)]
 
@@ -249,6 +255,7 @@ def knapsack(w, wt, val, n):
 
 def game_loop():
     global level
+    # defines max_load and required quota in each level
     levels = {
         1: [50, 60],
         2: [48, 65],
@@ -268,6 +275,7 @@ def game_loop():
     while True:
         update(player, out, shoals)
 
+        # time related variables
         aux.timer_text(screen, show_timer)
         show_timer -= (time.perf_counter() - level_timer)
         level_timer = time.perf_counter()
@@ -280,6 +288,7 @@ def game_loop():
         ordered_array = mg.merge_sort(get_x_coordinates(shoals, player))
         collision(shoals, ordered_array, player)
 
+        # calls knapsack and sets required variables
         if math.sqrt((player.rect[0] - out.rect[0]) ** 2 + (player.rect[1] - out.rect[1]) ** 2) < 30:
             out.load = 0
             out.current_value = 0
@@ -308,6 +317,7 @@ def game_loop():
             wt.clear()
             vl.clear()
 
+        # detects key presses
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 aux.quit_game()
