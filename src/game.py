@@ -23,9 +23,6 @@ icon = pygame.image.load('../src/images/icon.png')
 pygame.display.set_icon(icon)
 
 
-# fazer função de fade in fade out pra dar blit nos cardumes
-
-
 def player_interface(player):
     screen.blit(
         aux.text_outline(pygame.font.SysFont('default', 25), "Carga atual: " + str(player.current_load) + "/" + str(player.max_load), colors.WHITE, colors.BLACK),
@@ -103,11 +100,11 @@ class Player(object):
 
 
 class Exit(object):
-    def __init__(self):
+    def __init__(self, values):
         self.load = 0
         self.current_value = 0
-        self.max_load = 60
-        self.quota = 80
+        self.max_load = values[0]
+        self.quota = values[1]
         self.rect = pygame.Rect(1298, 698, 20, 20)
         self.shoals = []
 
@@ -220,40 +217,53 @@ def finish_game_window():
 
 
 # increase difficulty
-def next_level(out):
+def next_level():
     global level
     level += 1
     if level == 6:
         finish_game_window()
-    out.load = 0
-    out.current_value = 0
-    out.max_load -= 5
-    out.quota += 10
 
 
-def knapSack(W, wt, val, n):
-    K = [[0 for x in range(W + 1)] for x in range(n + 1)]
+def knapsack(w, wt, val, n):
+    k = [[0 for x in range(w + 1)] for x in range(n + 1)]
 
-    # Build table K[][] in bottom up manner
     for i in range(n + 1):
-        for w in range(W + 1):
+        for w in range(w + 1):
             if i == 0 or w == 0:
-                K[i][w] = 0
+                k[i][w] = 0
             elif wt[i - 1] <= w:
-                K[i][w] = max(val[i - 1] + K[i - 1][w - wt[i - 1]], K[i - 1][w])
+                k[i][w] = max(val[i - 1] + k[i - 1][w - wt[i - 1]], k[i - 1][w])
             else:
-                K[i][w] = K[i - 1][w]
+                k[i][w] = k[i - 1][w]
 
-    return K[n][W]
+    result = []
+    for i in range(n, 0, -1):
+        if k[i-1][w] == k[i][w]:
+            continue
+        else:
+            result.append([wt[i-1], val[i-1]])
+            w -= wt[i-1]
+
+    return result
 
 
 def game_loop():
+    global level
+    levels = {
+        1: [60, 80],
+        2: [55, 85],
+        3: [50, 90],
+        4: [45, 95],
+        5: [40, 100]
+    }
     level_timer = time.perf_counter()
-    show_timer = 60
+    show_timer = 80
     elapsed = time.perf_counter()
     player = Player()
-    out = Exit()
+    out = Exit(levels[level])
     shoals = []
+    wt = []
+    vl = []
 
     while True:
         update(player, out, shoals)
@@ -271,22 +281,32 @@ def game_loop():
         collision(shoals, ordered_array, player)
 
         if math.sqrt((player.rect[0] - out.rect[0]) ** 2 + (player.rect[1] - out.rect[1]) ** 2) < 30:
-            # knapsack usando os cardumes do navio e do porto, descartar os q n forem selecionados
-            wt = []
-            vl = []
+            out.load = 0
+            out.current_value = 0
+
             for shoal in player.shoals:
                 wt.append(shoal.weight)
                 vl.append(shoal.value)
 
             for shoal in out.shoals:
-                wt.append(shoal.weight)
-                vl.append(shoal.value)
+                wt.append(shoal[0])
+                vl.append(shoal[1])
 
-            out.current_value = knapSack(out.max_load, wt, vl, len(wt))
+            out.shoals = knapsack(out.max_load, wt, vl, len(wt))
+            player.shoals.clear()
+            player.current_load = 0
+            player.total_value = 0
+
+            for shoal in out.shoals:
+                out.load += shoal[0]
+                out.current_value += shoal[1]
 
             if out.current_value >= out.quota:
-                next_level(out)
+                next_level()
                 restart_game_window(True)
+
+            wt.clear()
+            vl.clear()
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -298,13 +318,13 @@ def game_loop():
                         player.current_load -= temp.weight
                         player.total_value -= temp.value
                 if event.key == pygame.K_UP:
-                    player.movement[0] = 1
+                    player.movement[0] = 2
                 if event.key == pygame.K_DOWN:
-                    player.movement[1] = 1
+                    player.movement[1] = 2
                 if event.key == pygame.K_LEFT:
-                    player.movement[2] = 1
+                    player.movement[2] = 2
                 if event.key == pygame.K_RIGHT:
-                    player.movement[3] = 1
+                    player.movement[3] = 2
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
                     player.movement[0] = 0
